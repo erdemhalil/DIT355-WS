@@ -18,9 +18,11 @@ wss.on("connection", ws => {
                             ws.send(message.toString())
                         }
                         client.unsubscribe(topic)
+                        client.publish(topic, "")
                     } catch (e) {
                         ws.send(JSON.stringify({"Error": "Received bad data from the server."}))
                         client.unsubscribe(topic)
+                        client.publish(topic, "")
                     }
                 })
             })
