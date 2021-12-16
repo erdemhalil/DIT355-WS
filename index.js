@@ -4,25 +4,25 @@ const client = mqtt.connect("mqtt://localhost:1883/")
 
 const wss = new WebSocket.Server({ port: 8082 })
 
+var  options = { qos: 1 }
+
 wss.on("connection", ws => {
     ws.on("message", mes => {
         try {
             let clientMessage = mes.toString()
             clientMessage = JSON.parse(clientMessage)
             let link = '/dentistimo/' + clientMessage.id
-            client.publish(link, JSON.stringify(clientMessage))
+            client.publish(link, JSON.stringify(clientMessage), options)
             client.subscribe(link, e => {
                 client.on('message', (topic, message) => {
                     try{
-                        if(JSON.parse(message).id === clientMessage.id){
+                        if(JSON.parse(message).id === clientMessage.id && JSON.parse(message)["response"] === "response"){
                             ws.send(message.toString())
+                            client.unsubscribe(topic)
                         }
-                        client.unsubscribe(topic)
-                        client.publish(topic, "")
                     } catch (e) {
                         ws.send(JSON.stringify({"Error": "Received bad data from the server."}))
                         client.unsubscribe(topic)
-                        client.publish(topic, "")
                     }
                 })
             })
