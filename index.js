@@ -10,19 +10,17 @@ wss.on("connection", ws => {
             let clientMessage = mes.toString()
             clientMessage = JSON.parse(clientMessage)
             let link = '/dentistimo/' + clientMessage.id
-            client.publish(link, JSON.stringify(clientMessage))
-            client.subscribe(link, e => {
+            client.publish(link, JSON.stringify(clientMessage), {qos:1})
+            client.subscribe(link, {qos:1},e => {
                 client.on('message', (topic, message) => {
                     try{
-                        if(JSON.parse(message).id === clientMessage.id){
+                        if(JSON.parse(message).id === clientMessage.id && JSON.parse(message)["response"] === "response"){
                             ws.send(message.toString())
+                            client.unsubscribe(topic)
                         }
-                        client.unsubscribe(topic)
-                        client.publish(topic, "")
                     } catch (e) {
                         ws.send(JSON.stringify({"Error": "Received bad data from the server."}))
                         client.unsubscribe(topic)
-                        client.publish(topic, "")
                     }
                 })
             })
