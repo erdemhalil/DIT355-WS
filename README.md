@@ -2,6 +2,8 @@
 
 Because modern browsers can’t directly interface with MQTT there needed to be a bridge between the client and MQTT. The client connects to the server and send a message that is then forwarded to MQTT awaiting a response.  
 
+For more detailed information of the component and the whole system head over to the documentation repository by [clicking here](https://git.chalmers.se/courses/dit355/test-teams-formation/team-2/documentation).
+
 ## Setup Instructions
 
 ### Prerequisites 
