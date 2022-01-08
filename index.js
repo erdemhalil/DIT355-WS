@@ -8,6 +8,7 @@ let count = 0
 setInterval(() => {
     count = 0
 }, 1000);
+console.log("connected")
 
 wss.on("connection", ws => {
     if (count < 10) {
